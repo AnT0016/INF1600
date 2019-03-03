@@ -65,13 +65,16 @@ int main(int argc, char** argv) {
    /* Parse data file name */
    if(argc != 2) usage(argv[0]);
    datafn = strdup(argv[1]);
+   
    /* Parse data from file */
    matrix_parse(datafn, &matdata, &matorder);
    matrix_print("original", matdata, matorder);
+
    /* Calculate reference transpose matrix */
    transposec = matrix_create(matorder);
    matrix_transpose(matdata, transposec, matorder);
    matrix_print("transpose (C function)", transposec, matorder);
+
    /* Calculate reference diagonal matrix */
    diagonalc = matrix_create(matorder);
    matrix_diagonal(matdata, diagonalc, matorder);
@@ -84,6 +87,19 @@ int main(int argc, char** argv) {
    multipliedc = matrix_create(matorder);
    matrix_multiply(matdata, transposec, multipliedc, matorder);
    matrix_print("original x transpose (C function)", multipliedc, matorder);
+   
+    /* Test assembler function for transpose */
+   transposeasm = matrix_create(matorder);
+   matrix_transpose_asm(matdata, transposeasm, matorder);
+   matrix_print("transpose (assembler function)", transposeasm, matorder);
+   if(matrix_equals(transposec, transposeasm, matorder) == 1)
+      printf("OK: transpose calculated with assembly function matches reference\n\n");
+   else {
+      printf("FAIL: transpose calculated with assembly function does not match reference\n\n");
+      exit(1);
+   }
+   
+   
    /* Test assembler equality function */
    if(matrix_equals_asm(matdata, matdata, matorder) == 1)
       printf("OK: equality test with original matrix passed (assembler function)\n\n");
@@ -97,16 +113,7 @@ int main(int argc, char** argv) {
       printf("FAIL: inequality test between original and reference transpose failed (assembler function)\n\n");
       exit(1);
    }
-   /* Test assembler function for transpose */
-   transposeasm = matrix_create(matorder);
-   matrix_transpose_asm(matdata, transposeasm, matorder);
-   matrix_print("transpose (assembler function)", transposeasm, matorder);
-   if(matrix_equals(transposec, transposeasm, matorder) == 1)
-      printf("OK: transpose calculated with assembly function matches reference\n\n");
-   else {
-      printf("FAIL: transpose calculated with assembly function does not match reference\n\n");
-      exit(1);
-   }
+  
    /* Test assembler function for diagonal */
    diagonalasm = matrix_create(matorder);
    matrix_diagonal_asm(matdata, diagonalasm, matorder);
@@ -224,7 +231,7 @@ static char* read_line(FILE* fd, size_t* len) {
 }
 
 void matrix_parse(const char* datafn, int** matdata, int* matorder) {
-   /* Variables */
+      /* Variables */
    FILE* fd;       /* File stream */
    char* line;     /* Line of data */
    size_t linelen; /* Size of the line of data */
