@@ -1,54 +1,60 @@
 .global matrix_row_aver_asm
 
+/*
+** elem         -4(%ebp) 
+** c            -8(%ebp)
+** r            -12(%ebp)
+** matorder     16(%ebp)
+** outmatdata   12(%ebp)
+** inmatdata    8(%ebp)
+*/ 
+
 matrix_row_aver_asm:
         push %ebp      			/* Save old base pointer */
         mov %esp, %ebp 			/* Set ebp to current esp */
 
-; 	mov 8(%ebp), %eax		# On met inmatdata1 dans eax
-; 	mov 12(%ebp), %esi		# On met inmatdata2 dans esi
-; 	mov 16(%ebp), %edx		# On met la valeur de matorder dans edx
-; 	sub $4, %esp			# On fait de l'espace pour r # -4(%ebp) pointe sur r
-; 	sub $4, %esp			# On fait de l'espace pour c # -8(%ebp) pointe sur c
+       	subl	$16, %esp               # On fait de l'espace pour r, c et esp
+	movl	$0, -12(%ebp)           # On met 0 dans r
+	jmp	condition1              # Sans condition partir a la condition 1
 
-; 	conditionFor:
-; 		cmp %eax, -4(%ebp)	# On fait matorder - r et active les flags en consequent
-; 		jnb exit					#cmp src, dst 	       	ZF  CF	
-; 						            #	dst = src 		1 	0
-; 						            #	dst < src 		0 	1
-; 						            #	dst > src 		0 	0
-; # jna est active si CF = 1 CAD quand la destination >= source 
-; 		add $1, -4(%ebp)	# On ajoute 1 a r 
+for1:
+	movl	$0, -4(%ebp)            # Initialisation de element a 0
+	movl	$0, -8(%ebp)            # Initialisation de c a 0
+	jmp	condition2              # Sans condition aller a la condition 2
 
-; 	conditionFor2:
-; 		cmp %eax, -8(%ebp)	# On fait c-matorder et active les flags en consequent
-; 		jnb conditionFor 	# Si c >= matorder on revient a la premiere loop
-; 		add $1, -8(%ebp)	# On ajoute 1 a c 
+for2:
+	movl	-12(%ebp), %eax         # On met r dans eax
+	imull	16(%ebp), %eax          # Multiplication de matorder avec r
+	movl	%eax, %edx              # On met r*matorder dans edx
+	movl	-8(%ebp), %eax          # On met c dans eax
+	addl	%edx, %eax              # On ajoute c a r*matorder
+	leal	0(,%eax,4), %edx        # On trouve le contenu de l'adresse et met dans edx
+	movl	8(%ebp), %eax           # On met inmatdata dans eax
+	addl	%edx, %eax              # On fait inmatdata+ eedx (inmatdata[c+matorder*r])
+	movl	(%eax), %eax            # On met le contenu a l'adresse eax dans eax
+	addl	%eax, -4(%ebp)          # On ajoutue eax a c dans c
+	addl	$1, -8(%ebp)            # On increment r de 1
 
-; 	conditionIf:
-; 		mov -8(%ebp), %ebx		# On met c dans ebx
-; 		imul 16(%ebp), %ebx 		# On multiplie le contenu de ebp (c) avec matorder dans ebx 
-; 		add -4(%ebp), %ebx	 	# On ajoute la valeur de r au conteu de ebx [c+r*matorder] dans ebx
+condition2:
+	movl	-8(%ebp), %eax          # On met c dans eax
+	cmpl	16(%ebp), %eax          # Comapraison de c et matorder
+	jnae	for2                    # Si c < matorder on fait un jump au for2
+                                        # Sinon on :
+	movl	-12(%ebp), %eax         # On met r dans eax
+	leal	0(,%eax,4), %edx        # On trouve la valeur demandee et met dans edx
+	movl	12(%ebp), %eax          # On met outmatdata dans eax
+	leal	(%edx,%eax), %ecx       # On met edx+eax dans ecx
+	movl	-4(%ebp), %eax          # On met c dans eax
+	cltd                            # sign-extend EAX -> EDX:EAX (de stackoverflow pour regler une erreur de compilation)
+	idivl	16(%ebp)                # Division par source 32,
+	movl	%eax, (%ecx)            # On met la valeur de eax dans l'emplacement memeoire a l'adreesse ecx
+	addl	$1, -12(%ebp)           # Icrementation de r de 1
 
+condition1:
+	movl	-12(%ebp), %eax         # On met r dans eax
+	cmpl	16(%ebp), %eax          # Comparaison de r et matorder 
+	jnae	for1                    # SI r < matorder aller au for1
 
-; 		mov (%eax, %ebx), %ecx		# On met la valeur de inmatdata1[ebx] dans ecx
-; 		mov (%esi, %ebx), %ebx		# On met la valeur de inmatdata2[ebx] dans ebx
-; 		cmp %ebx, %ecx
-; 		jne conditionFor		# Si les deux valeurs ne sont pas egale on increment et continu
-; 		mov $1, %eax			# Si on arrive ici c'est que les deux valeurs sont egale alors on met 1 dans eax et on fini la fonction
-; 		jmp fin
-	 
-; 	exit:
-; 		mov $0, %eax			# On accede ici quand on ne retourne jamais 1	
-; 	fin:
-		leave          			/* Restore ebp and esp */
-		ret           			/* Return to the caller */
-
-
-# ebp pointe sur son adresse qui est l'endroit ou commence la fonction 
-# ebp + 4 pointe a la valeur de l'adresse de la fonction precedente.	
-# slide 19 cour 6
-# ebp + 8 pointe ver inmatdata1
-# ebp +12 pointe vers inmatdata2
-# ebp+16 pointe vers matorder
-# ebp-4 pointe vers la 1ere variable locale ...
-# la valeur de retour est toujours dans eax
+fin:
+        leave          /* restore ebp and esp */
+        ret            /* return to the caller */

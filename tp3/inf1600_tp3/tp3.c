@@ -98,8 +98,6 @@ int main(int argc, char** argv) {
       printf("FAIL: transpose calculated with assembly function does not match reference\n\n");
       exit(1);
    }
-   
-   
    /* Test assembler equality function */
    if(matrix_equals_asm(matdata, matdata, matorder) == 1)
       printf("OK: equality test with original matrix passed (assembler function)\n\n");
