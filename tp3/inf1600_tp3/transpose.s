@@ -3,6 +3,7 @@
 matrix_transpose_asm:
         push %ebp      /* save old base pointer */
         mov %esp, %ebp /* set ebp to current esp */
+<<<<<<< HEAD
 
 	subl	$8, %esp        # On fait de la palce sur la pile pour c -4(%ebp) et r -8(%ebp)
 	movl	$0, -8(%ebp)    # Initialisation de r a 0

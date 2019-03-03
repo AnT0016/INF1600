@@ -379,7 +379,7 @@ void matrix_diagonal(const int* inmatdata, int* outmatdata, int matorder) {
       for(c = 0; c < matorder; ++c) {
 		if(c == r){
 			outmatdata[c + r * matorder] = inmatdata[c + r * matorder];
-		} 
+		}
         else{
 			outmatdata[c + r * matorder] = 0;
 		}
