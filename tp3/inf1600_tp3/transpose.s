@@ -1,4 +1,4 @@
-.globl matrix_transpose_asm
+.global matrix_transpose_asm
 
 /*
 ** r            -8(%ebp)
@@ -18,7 +18,7 @@ matrix_transpose_asm:
 
         for1:
                 movl	$0, -4(%ebp)            # Intialisation de c a 0 a chaque iteration de la boucle for 1
-                jmp	condition2              # Sans condition on va a la boucle condition 2 
+                jmp	condition2             	 	# Sans condition on va a la boucle condition 2 
 
         for2:
                 movl	-4(%ebp), %eax          # On met c dans eax
@@ -42,7 +42,7 @@ matrix_transpose_asm:
                 addl	$1, -4(%ebp)            # On increment c de 1
 
         condition2:
-        	movl	-4(%ebp), %eax          # On met c dans eax
+				movl	-4(%ebp), %eax          # On met c dans eax
                 cmpl	16(%ebp), %eax          # On compare c et matorder
                 jnae	for2                    # Si eax < 16(ebp) on fait un jump
                 addl	$1, -8(%ebp)            # On increment r (si on fait pas de jump)                        

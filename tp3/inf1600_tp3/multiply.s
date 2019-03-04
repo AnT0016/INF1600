@@ -1,4 +1,4 @@
-.globl matrix_multiply_asm
+.global matrix_multiply_asm
 
 /*
 ** elem         -16(%ebp)      
@@ -15,9 +15,9 @@ matrix_multiply_asm:
         push %ebp      /* save old base pointer */
         mov %esp, %ebp /* set ebp to current esp */
         
-        subl	$16, %esp        # On fait de la palce sur la pile pour c -4(%ebp), r -8(%ebp), i -12(%ebp) et elem -16(%ebp)
-        movl	$0, -8(%ebp)    # Initialisation de r a 0
-        jmp     condition1          # Sans condition on va a la condition 1
+        subl	$16, %esp        	# On fait de la palce sur la pile pour c -4(%ebp), r -8(%ebp), i -12(%ebp) et elem -16(%ebp)
+        movl	$0, -8(%ebp)    	# Initialisation de r a 0
+        jmp     condition1       	# Sans condition on va a la condition 1
 
         for1:
                 movl	$0, -4(%ebp)            # Intialisation de c a 0 a chaque iteration de la boucle for 1
@@ -26,7 +26,7 @@ matrix_multiply_asm:
         for2:
                 movl     $0, -16(%ebp)           # Initialisation d'elem a 0
                 movl     $0, -12(%ebp)           # Initialisation de a 0 de i a chaque iteration de la boucle 2
-                jmp     condition3              # Sans condition aller a condition3
+                jmp     condition3               # Sans condition aller a condition3
 
         for3:
                 movl	-8(%ebp), %eax          # Mettre r dans eax
@@ -69,7 +69,7 @@ matrix_multiply_asm:
                 addl	$1, -4(%ebp)            # On incremente c de 1
 
         condition2:
-        	movl	-4(%ebp), %eax          # On met c dans eax
+				movl	-4(%ebp), %eax          # On met c dans eax
                 cmpl	20(%ebp), %eax          # On compare c et matorder
                 jnae	for2                    # Si eax < 20(ebp) on fait un jump
                 addl	$1, -8(%ebp)            # On increment r (si on fait pas de jump)                        

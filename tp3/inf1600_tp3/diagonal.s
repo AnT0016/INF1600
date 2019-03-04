@@ -59,7 +59,7 @@ matrix_diagonal_asm:
 
 
         condition2:
-        	movl	-4(%ebp), %eax          # On met c dans eax
+				movl	-4(%ebp), %eax          # On met c dans eax
                 cmpl	16(%ebp), %eax          # On compare c et matorder
                 jnae	for2                    # Si eax < 16(ebp) on fait un jump
                 addl	$1, -8(%ebp)            # On increment r (si on fait pas de jump)                        

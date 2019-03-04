@@ -13,7 +13,7 @@ matrix_row_aver_asm:
         push %ebp      			/* Save old base pointer */
         mov %esp, %ebp 			/* Set ebp to current esp */
 
-       	subl	$16, %esp               # On fait de l'espace pour r, c et esp
+    subl	$16, %esp               # On fait de l'espace pour r, c et esp
 	movl	$0, -12(%ebp)           # On met 0 dans r
 	jmp	condition1              # Sans condition partir a la condition 1
 
@@ -39,7 +39,7 @@ condition2:
 	movl	-8(%ebp), %eax          # On met c dans eax
 	cmpl	16(%ebp), %eax          # Comapraison de c et matorder
 	jnae	for2                    # Si c < matorder on fait un jump au for2
-                                        # Sinon on :
+                                    # Sinon on :
 	movl	-12(%ebp), %eax         # On met r dans eax
 	leal	0(,%eax,4), %edx        # On trouve la valeur demandee et met dans edx
 	movl	12(%ebp), %eax          # On met outmatdata dans eax

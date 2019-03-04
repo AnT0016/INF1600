@@ -1,4 +1,4 @@
-.globl matrix_equals_asm
+.global matrix_equals_asm
 
 /*
 ** r            -8(%ebp)
@@ -18,7 +18,7 @@ matrix_equals_asm:
 
         for1:
                 movl	$0, -4(%ebp)            # Intialisation de c a 0 a chaque iteration de la boucle for 1
-                jmp	condition2              # Sans condition on va a la boucle condition 2 
+                jmp	condition2              	# Sans condition on va a la boucle condition 2 
 
         for2:
                 movl	-4(%ebp), %eax          # On met c dans eax
@@ -38,13 +38,13 @@ matrix_equals_asm:
                 movl	12(%ebp), %eax          # On met outmatdata dans eax
                 addl	%eax, %edx              # On ajout ajoute eax a edx et on met dans edx
                 movl	(%ecx), %eax            # On met met ecx(inmatdata[edx]) dans eax
-                cmp	%eax, (%edx)            # Comparaison de eax et edx
+                cmp	%eax, (%edx)            	# Comparaison de eax et edx
                 je      finEqual
                 addl	$1, -4(%ebp)            # On increment c de 1
 
 
         condition2:
-        	movl	-4(%ebp), %eax          # On met c dans eax
+				movl	-4(%ebp), %eax          # On met c dans eax
                 cmpl	16(%ebp), %eax          # On compare c et matorder
                 jnae	for2                    # Si eax < 16(ebp) on fait un jump
                 addl	$1, -8(%ebp)            # On increment r (si on fait pas de jump)                        
