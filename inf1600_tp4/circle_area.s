@@ -14,3 +14,4 @@ _ZNK7CCircle7AreaAsmEv:
         
         leave          /* restore ebp and esp */
         ret            /* return to the caller */
+

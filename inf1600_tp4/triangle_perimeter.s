@@ -14,3 +14,4 @@ _ZNK9CTriangle12PerimeterAsmEv:
         
         leave          /* restore ebp and esp */
         ret            /* return to the caller */
+
