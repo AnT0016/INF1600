@@ -10,14 +10,15 @@ _ZNK9CTriangle7AreaAsmEv:
 
         sub $8, %esp                   # On cree de la place a -4(ebp)on met p, et -8(ebp) on met des valeurs intermeddiaires
 
-	movl	8(%ebp), %eax
-	movl	(%eax), %eax
-	addl	$8, %eax
-	movl	(%eax), %eax
-	subl	$12, %esp
-	pushl	8(%ebp)
-	call	*%eax
+	movl	8(%ebp), %eax           # On met l'objet dans eax
+	movl	(%eax), %eax            # On met l'adresse de l'objet dans eax
+	movl	8(%eax), %eax           # On ajoute 8 pour acceder a la fonction premietre
+	# movl	(%eax), %eax    
+	pushl	8(%ebp)                 # On met l'objet sur la pile 
+	call	*%eax                   # On apelle la fonction perimetre sur l'objet
+        fld     %st(0)                  # On met la valeur de retour sur le stack
 	addl	$16, %esp
+
         ; fld     constante2                      # On met 2 sur la pile a s[0] et resultat de perimetre a s[1]
         ; fdivrp                                  # Division de s[1] (perimetre) par s[1] (2.0)
         
