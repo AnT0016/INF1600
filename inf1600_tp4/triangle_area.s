@@ -48,5 +48,3 @@ _ZNK9CTriangle7AreaAsmEv:
 
         leave          /* restore ebp and esp */
         ret            /* return to the caller */
-
-        # fld -4(%ebp)
