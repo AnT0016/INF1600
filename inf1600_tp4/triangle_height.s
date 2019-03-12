@@ -12,8 +12,6 @@ _ZNK9CTriangle9HeightAsmEv:
 	movl	(%eax), %eax            # On met l'adresse dans eax
         pushl	8(%ebp)                 # On met l'objet sur le stack                
 	call	*%eax                   # On appelle la fonction sur l'objet
-        fstp    -4(%ebp)                # On met la valeur de retour (A) dans -4(ebp)
-        fld     -4(%ebp)                # On remet la valeur (A) enregistree sur la pile 
 
         fld     12(%eax)                # On met mSides[2] sur la pile a s[0] et A a s[1]
         fdivrp                          # Division de s[1] (A) par s[0] (mSides[2])
