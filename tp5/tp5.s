@@ -10,8 +10,6 @@ Decryption_fctC:
 	.cfi_offset 5, -8
 	movl	%esp, %ebp
 	.cfi_def_cfa_register 5
-	call	__x86.get_pc_thunk.ax
-	addl	$_GLOBAL_OFFSET_TABLE_, %eax
 	movl	8(%ebp), %eax
 	andl	$-16777216, %eax
 	movl	%eax, %edx
@@ -46,8 +44,6 @@ Decryption_fct:
 	pushl	%ebx
 	subl	$16, %esp
 	.cfi_offset 3, -12
-	call	__x86.get_pc_thunk.ax
-	addl	$_GLOBAL_OFFSET_TABLE_, %eax
 	movl	$0, -8(%ebp)
 	movl	8(%ebp), %ebx
 #APP
@@ -99,13 +95,9 @@ main:
 	pushl	%ebp
 	.cfi_escape 0x10,0x5,0x2,0x75,0
 	movl	%esp, %ebp
-	pushl	%ebx
 	pushl	%ecx
-	.cfi_escape 0xf,0x3,0x75,0x78,0x6
-	.cfi_escape 0x10,0x3,0x2,0x75,0x7c
-	subl	$16, %esp
-	call	__x86.get_pc_thunk.bx
-	addl	$_GLOBAL_OFFSET_TABLE_, %ebx
+	.cfi_escape 0xf,0x3,0x75,0x7c,0x6
+	subl	$20, %esp
 	movl	$-290800641, -12(%ebp)
 	pushl	-12(%ebp)
 	call	Decryption_fct
@@ -113,18 +105,13 @@ main:
 	subl	$4, %esp
 	pushl	%eax
 	pushl	-12(%ebp)
-	leal	.LC0@GOTOFF(%ebx), %eax
-	pushl	%eax
-	call	printf@PLT
+	pushl	$.LC0
+	call	printf
 	addl	$16, %esp
 	movl	$0, %eax
-	leal	-8(%ebp), %esp
-	popl	%ecx
-	.cfi_restore 1
+	movl	-4(%ebp), %ecx
 	.cfi_def_cfa 1, 0
-	popl	%ebx
-	.cfi_restore 3
-	popl	%ebp
+	leave
 	.cfi_restore 5
 	leal	-4(%ecx), %esp
 	.cfi_def_cfa 4, 4
@@ -132,27 +119,5 @@ main:
 	.cfi_endproc
 .LFE2:
 	.size	main, .-main
-	.section	.text.__x86.get_pc_thunk.ax,"axG",@progbits,__x86.get_pc_thunk.ax,comdat
-	.globl	__x86.get_pc_thunk.ax
-	.hidden	__x86.get_pc_thunk.ax
-	.type	__x86.get_pc_thunk.ax, @function
-__x86.get_pc_thunk.ax:
-.LFB3:
-	.cfi_startproc
-	movl	(%esp), %eax
-	ret
-	.cfi_endproc
-.LFE3:
-	.section	.text.__x86.get_pc_thunk.bx,"axG",@progbits,__x86.get_pc_thunk.bx,comdat
-	.globl	__x86.get_pc_thunk.bx
-	.hidden	__x86.get_pc_thunk.bx
-	.type	__x86.get_pc_thunk.bx, @function
-__x86.get_pc_thunk.bx:
-.LFB4:
-	.cfi_startproc
-	movl	(%esp), %ebx
-	ret
-	.cfi_endproc
-.LFE4:
-	.ident	"GCC: (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0"
+	.ident	"GCC: (GNU) 8.2.1 20181215 (Red Hat 8.2.1-6)"
 	.section	.note.GNU-stack,"",@progbits
