@@ -43,39 +43,19 @@ Decryption_fct:
 	.cfi_offset 5, -8
 	movl	%esp, %ebp
 	.cfi_def_cfa_register 5
-	pushl	%ebx
 	subl	$16, %esp
-	.cfi_offset 3, -12
 	call	__x86.get_pc_thunk.ax
 	addl	$_GLOBAL_OFFSET_TABLE_, %eax
-	movl	$0, -8(%ebp)
-	movl	8(%ebp), %ebx
+	movl	$0, -4(%ebp)
+	movl	8(%ebp), %eax
 #APP
-# 26 "tp5.c" 1
-	movl	$0xff000000, 	%ecx;  
-	movl 	%ebx,				%eax;  
-	and	%eax, 			%ecx;  
-	movl	$0xff, 			%edx;  
-	and	%eax, 			%edx;  
-	shl	$16, 			%edx;  
-	or		%edx,			%ecx;  
-	movl 	$0xff00,		%edx;  
-	and	%eax,			%edx;  
-	or 	%edx,			%ecx;  
-	mov 	$0xff0000,		%edx;  
-	and 	%eax,			%edx;  
-	shr 	$16,			%edx;  
-	or 	%edx,			%ecx;  
-	movl 	%ecx,			%ebx;     
-	
+# 51 "tp5.c" 1
+	movl %eax, %eax;rol $8, %eax;bswap %eax;
 # 0 "" 2
 #NO_APP
-	movl	%ebx, -8(%ebp)
-	movl	-8(%ebp), %eax
-	addl	$16, %esp
-	popl	%ebx
-	.cfi_restore 3
-	popl	%ebp
+	movl	%eax, -4(%ebp)
+	movl	-4(%ebp), %eax
+	leave
 	.cfi_restore 5
 	.cfi_def_cfa 4, 4
 	ret
